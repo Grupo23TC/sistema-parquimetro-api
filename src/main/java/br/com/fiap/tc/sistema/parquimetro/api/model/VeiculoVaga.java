@@ -1,9 +1,10 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
 import br.com.fiap.tc.sistema.parquimetro.api.enums.StatusVagaEnum;
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
@@ -11,19 +12,18 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode
 @ToString
-@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Document(collection = "veiculoVaga")
 public class VeiculoVaga {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @NonNull
-    private Long idVeiculo;
+    @DBRef
+    private Veiculo veiculo;
 
-    @NonNull
-    private Long idVaga;
+    @DBRef
+    private Vaga vaga;
 
     @NonNull
     private LocalDateTime entrada;
@@ -31,8 +31,8 @@ public class VeiculoVaga {
     @NonNull
     private LocalDateTime saida;
 
-    private Long idPeriodo;
+    @DBRef
+    private Periodo periodo;
 
-    @Enumerated(EnumType.STRING)
     private StatusVagaEnum statusVagaEnum;
 }

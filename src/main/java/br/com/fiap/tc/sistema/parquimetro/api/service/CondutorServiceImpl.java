@@ -1,7 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
 import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDto;
-import br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.exception.CondutorNotFounException;
+import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFounException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor;
 import br.com.fiap.tc.sistema.parquimetro.api.repository.CondutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class CondutorServiceImpl implements CondutorService {
         condutor.setTelefone(condutorDto.telefone());
         condutor.setEmail(condutorDto.email());
         condutor.setCpf(condutorDto.cpf());
-        condutor.setFormaPagamento(condutorDto.formaPagamentoEnum());
+        condutor.setFormaPagamento(condutorDto.formaPagamento());
 
         Condutor saveCondutor = condutorRepository.save(condutor);
         return toDTO(saveCondutor);
@@ -65,7 +65,7 @@ public class CondutorServiceImpl implements CondutorService {
         condutor.setTelefone(condutorDto.telefone());
         condutor.setEmail(condutorDto.email());
         condutor.setCpf(condutorDto.cpf());
-        condutor.setFormaPagamento(condutorDto.formaPagamentoEnum());
+        condutor.setFormaPagamento(condutorDto.formaPagamento());
 
 
         Condutor updatedCondutor = condutorRepository.save(condutor);
@@ -76,6 +76,7 @@ public class CondutorServiceImpl implements CondutorService {
     public void deletarCondutor(String condutorId) {
         condutorRepository.deleteById(condutorId);
     }
+
     //TODO: Implementar o método toDTO
    private CondutorDto toDTO(Condutor condutor) {
         return new CondutorDto(
@@ -84,7 +85,7 @@ public class CondutorServiceImpl implements CondutorService {
                 condutor.getTelefone(),
                 condutor.getEmail(),
                 condutor.getCpf(),
-                condutor.getVeiculosList(),
+                condutor.getVeiculos(),
                 condutor.getFormaPagamento()
         );
 }

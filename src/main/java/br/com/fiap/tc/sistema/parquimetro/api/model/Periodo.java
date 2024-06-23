@@ -1,24 +1,20 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
 import br.com.fiap.tc.sistema.parquimetro.api.enums.TipoPeriodoEnum;
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-@Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
+@Document(collection = "periodo")
 public class Periodo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
+    private String id;
     private TipoPeriodoEnum tipoPeriodoEnum;
-
-    private int duracao;
+    private Integer duracao;
 }

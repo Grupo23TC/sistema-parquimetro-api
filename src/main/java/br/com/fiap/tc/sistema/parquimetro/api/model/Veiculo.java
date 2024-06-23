@@ -1,27 +1,27 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-@Entity
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Document(collection = "veiculo")
 public class Veiculo {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     @NonNull
     private String placa;
-
     @NonNull
     private String tipo;
+    @DBRef
+    private List<Recibo> recibos = new ArrayList<>();
 }

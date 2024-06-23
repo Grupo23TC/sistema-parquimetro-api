@@ -1,4 +1,4 @@
-package br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.dto;
+package br.com.fiap.tc.sistema.parquimetro.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
