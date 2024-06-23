@@ -1,8 +1,8 @@
-package br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler;
+package br.com.fiap.tc.sistema.parquimetro.api.handler;
 
-import br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.exception.ErroCustomizado;
-import br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.exception.RecursoNotFoundException;
-import br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.exception.ValidacaoErro;
+import br.com.fiap.tc.sistema.parquimetro.api.exception.ErroCustomizado;
+import br.com.fiap.tc.sistema.parquimetro.api.exception.RecursoNotFoundException;
+import br.com.fiap.tc.sistema.parquimetro.api.exception.ValidacaoErro;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +10,15 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
 
 import java.time.Instant;
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class GlobalExceptionHandler {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(RecursoNotFoundException.class)
+    @ExceptionHandler(RecursoNotFoundException.class)
     public ResponseEntity<ErroCustomizado> handleRecursoNotFoundException(RecursoNotFoundException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErroCustomizado erro = new ErroCustomizado(
@@ -28,7 +30,7 @@ public class ExceptionHandler {
         return ResponseEntity.status(status).body(erro);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroCustomizado> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ValidacaoErro erro = new ValidacaoErro(
@@ -44,7 +46,7 @@ public class ExceptionHandler {
         return ResponseEntity.status(status).body(erro);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroCustomizado> httpMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErroCustomizado erro = new ErroCustomizado(
@@ -55,6 +57,4 @@ public class ExceptionHandler {
         );
         return ResponseEntity.status(status).body(erro);
     }
-
-
 }

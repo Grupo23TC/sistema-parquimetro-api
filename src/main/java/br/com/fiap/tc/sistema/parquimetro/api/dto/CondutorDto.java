@@ -1,7 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.dto;
 
 import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
-import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor_Veiculo;
+import br.com.fiap.tc.sistema.parquimetro.api.model.CondutorVeiculo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
@@ -19,8 +19,8 @@ public record CondutorDto(
         String email,
         @CPF(message = "CPF inválido")
         String cpf,
-        List<Condutor_Veiculo> veiculosList,
-        FormaPagamentoEnum formaPagamentoEnum
+        List<CondutorVeiculo> veiculos,
+        FormaPagamentoEnum formaPagamento
 
 ) {
 }

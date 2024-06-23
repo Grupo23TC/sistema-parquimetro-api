@@ -1,4 +1,4 @@
-package br.com.fiap.tc.sistema.parquimetro.api.exceptionhandler.exception;
+package br.com.fiap.tc.sistema.parquimetro.api.exception;
 
 public class CondutorNotFounException extends RuntimeException{
 
