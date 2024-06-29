@@ -1,25 +1,26 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
-import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDto;
+import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
 public interface CondutorService {
 
-    void validarCondutor(Condutor condutor) throws RuntimeException;
+    public void validarCondutor(Condutor condutor) throws RuntimeException;
 
-    List<CondutorDto> listaCondutor();
+    public List<CondutorDTO> listaCondutor();
 
-    CondutorDto buscarCondutorPorId(String condutorId);
+    public CondutorDTO buscarCondutorPorId(String condutorId);
 
-    CondutorDto criarCondutor(CondutorDto condutorDto);
+    public CondutorDTO criarCondutor(CondutorDTO condutorDTO);
 
-    CondutorDto atualizarCondutor(String condutorId, CondutorDto condutorDto);
+    public void atualizarFormaPagamento(String id, FormaPagamentoEnum formaPagamento);
 
-    void deletarCondutor(String condutorId);
+    public CondutorDTO atualizarCondutor(String condutorId, CondutorDTO condutorDTO);
+
+    public void deletarCondutor(String condutorId);
 }
-
 

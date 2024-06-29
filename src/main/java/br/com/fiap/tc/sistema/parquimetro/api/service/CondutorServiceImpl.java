@@ -1,6 +1,6 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
-import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDto;
+import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDTO;
 import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFounException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor;
 import br.com.fiap.tc.sistema.parquimetro.api.repository.CondutorRepository;
@@ -28,7 +28,7 @@ public class CondutorServiceImpl implements CondutorService {
     }
     @Override
     @Transactional(readOnly = true)
-    public List<CondutorDto> listaCondutor() {
+    public List<CondutorDTO> listaCondutor() {
         List<Condutor> condutores = condutorRepository.findAll();
         return condutores.stream()
                 .map(this::toDTO)
@@ -37,14 +37,14 @@ public class CondutorServiceImpl implements CondutorService {
 
     @Override
     @Transactional(readOnly = true)
-    public CondutorDto buscarCondutorPorId(String condutorId) {
+    public CondutorDTO buscarCondutorPorId(String condutorId) {
         Condutor condutor = condutorRepository.findById(condutorId)
                 .orElseThrow(() -> new CondutorNotFounException(condutorId));
         return toDTO(condutor);
     }
 
     @Override
-    public CondutorDto criarCondutor(CondutorDto condutorDto) {
+    public CondutorDTO criarCondutor(CondutorDTO condutorDto) {
         Condutor condutor = new Condutor();
         condutor.setNome(condutorDto.nome());
         condutor.setTelefone(condutorDto.telefone());
@@ -57,7 +57,7 @@ public class CondutorServiceImpl implements CondutorService {
     }
 
     @Override
-    public CondutorDto atualizarCondutor(String condutorId, CondutorDto condutorDto) {
+    public CondutorDTO atualizarCondutor(String condutorId, CondutorDTO condutorDto) {
         Condutor condutor = condutorRepository.findById(condutorId)
                 .orElseThrow(() -> new CondutorNotFounException(condutorId));
 
@@ -78,8 +78,8 @@ public class CondutorServiceImpl implements CondutorService {
     }
 
     //TODO: Implementar o método toDTO
-   private CondutorDto toDTO(Condutor condutor) {
-        return new CondutorDto(
+   private CondutorDTO toDTO(Condutor condutor) {
+        return new CondutorDTO(
                 condutor.getId(),
                 condutor.getNome(),
                 condutor.getTelefone(),
