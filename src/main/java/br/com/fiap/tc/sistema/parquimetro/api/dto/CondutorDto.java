@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.List;
 
-public record CondutorDto(
+public record CondutorDTO(
 
         String id,
         @NotBlank(message = "Nome é obrigatório")
