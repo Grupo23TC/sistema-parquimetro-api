@@ -1,4 +1,4 @@
-package br.com.fiap.tc.sistema.parquimetro.api.enums;
+package br.com.fiap.tc.sistema.parquimetro.api.model.enums;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum TipoPeriodoEnum {
-    FIXO,
-    VARIAVEL
+public enum StatusPagamentoEnum {
+    PENDENTE,
+    CONFIRMADO,
+    CANCELADO
 }

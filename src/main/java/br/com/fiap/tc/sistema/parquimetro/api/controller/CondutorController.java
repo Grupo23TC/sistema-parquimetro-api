@@ -1,6 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.controller;
 
-import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDto;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.CondutorDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,25 @@ public class CondutorController {
   private CondutorService condutorService;
 
   @PostMapping
-  public ResponseEntity<CondutorDto> cadastrar(@RequestBody CondutorDto condutorDto) {
-    CondutorDto condutorSalvo = condutorService.criarCondutor(condutorDto);
+  public ResponseEntity<CondutorDTO> cadastrar(@RequestBody CondutorDTO condutorDto) {
+    CondutorDTO condutorSalvo = condutorService.criarCondutor(condutorDto);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(condutorSalvo.id())
-        .toUri();
+            .path("/{id}")
+            .buildAndExpand(condutorSalvo.id())
+            .toUri();
     return ResponseEntity.created(uri).body(condutorSalvo);
   }
 
+  @PutMapping("/{id}")
+  public void atualizarFormaPagamento(@PathVariable String id,
+                                      @RequestBody FormaPagamentoEnum formaPagamento) {
+
+    this.condutorService.atualizarFormaPagamento(id, formaPagamento);
+
+  }
+
   @GetMapping
-  public ResponseEntity<List<CondutorDto>> listar() {
+  public ResponseEntity<List<CondutorDTO>> listar() {
     return ResponseEntity.ok(condutorService.listaCondutor());
   }
 

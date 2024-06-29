@@ -1,6 +1,6 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
-import br.com.fiap.tc.sistema.parquimetro.api.enums.StatusVagaEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.StatusVagaEnum;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;

@@ -1,6 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
-import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.EnderecoDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -14,23 +15,23 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Document(collection = "condutor")
 public class Condutor {
     @Id
     private String id;
-    @NonNull
+
     private String nome;
-    @NonNull
+
     private String telefone;
-    @NonNull
+
+    private EnderecoDTO endereco;
+
     private String email;
-    @NonNull
-    private String cpf;
+
+    private String CPF;
 
     @DBRef
     private List<CondutorVeiculo> veiculos = new ArrayList<>();
 
-    @NonNull
     private FormaPagamentoEnum formaPagamento;
 }
