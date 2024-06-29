@@ -1,7 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
-import br.com.fiap.tc.sistema.parquimetro.api.dto.CondutorDTO;
-import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.CondutorDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor;
 
 import java.util.List;

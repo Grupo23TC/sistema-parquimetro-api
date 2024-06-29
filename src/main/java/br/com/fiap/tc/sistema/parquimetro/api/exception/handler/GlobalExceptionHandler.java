@@ -1,4 +1,4 @@
-package br.com.fiap.tc.sistema.parquimetro.api.handler;
+package br.com.fiap.tc.sistema.parquimetro.api.exception.handler;
 
 import br.com.fiap.tc.sistema.parquimetro.api.exception.ErroCustomizado;
 import br.com.fiap.tc.sistema.parquimetro.api.exception.RecursoNotFoundException;

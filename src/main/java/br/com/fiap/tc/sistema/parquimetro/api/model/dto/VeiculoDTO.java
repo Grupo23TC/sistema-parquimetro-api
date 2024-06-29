@@ -1,4 +1,4 @@
-package br.com.fiap.tc.sistema.parquimetro.api.dto;
+package br.com.fiap.tc.sistema.parquimetro.api.model.dto;
 
 import br.com.fiap.tc.sistema.parquimetro.api.model.Recibo;
 

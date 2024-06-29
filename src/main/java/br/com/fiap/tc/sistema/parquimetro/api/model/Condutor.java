@@ -1,7 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
-import br.com.fiap.tc.sistema.parquimetro.api.dto.EnderecoDTO;
-import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.EnderecoDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
