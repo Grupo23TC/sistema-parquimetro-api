@@ -1,6 +1,6 @@
-package br.com.fiap.tc.sistema.parquimetro.api.dto;
+package br.com.fiap.tc.sistema.parquimetro.api.model.dto;
 
-import br.com.fiap.tc.sistema.parquimetro.api.enums.FormaPagamentoEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.model.CondutorVeiculo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.List;
 
-public record CondutorDto(
+public record CondutorDTO(
 
         String id,
         @NotBlank(message = "Nome é obrigatório")
