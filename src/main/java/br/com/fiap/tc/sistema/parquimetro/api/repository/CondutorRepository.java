@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CondutorRepository extends MongoRepository<Condutor, String>{
-    Condutor findByCpf(String cpf);
+    Condutor findByCPF(String cpf);
 }

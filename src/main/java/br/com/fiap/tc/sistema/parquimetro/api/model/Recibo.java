@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
 public class Recibo {
     @Id
     private String id;
-    @DBRef
-    private Veiculo veiculo;
     private LocalDateTime entrada;
     private LocalDateTime saida;
 }

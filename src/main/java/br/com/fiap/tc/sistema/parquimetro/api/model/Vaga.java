@@ -11,9 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "vaga")
 public class Vaga {
-    @Id
-    private Long id;
     private String endereco;
 }

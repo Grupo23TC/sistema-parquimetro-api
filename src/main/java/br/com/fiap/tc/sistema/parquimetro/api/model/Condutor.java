@@ -30,8 +30,7 @@ public class Condutor {
 
     private String CPF;
 
-    @DBRef
-    private List<CondutorVeiculo> veiculos = new ArrayList<>();
-
     private FormaPagamentoEnum formaPagamento;
+
+    private List<Veiculo> veiculos;
 }

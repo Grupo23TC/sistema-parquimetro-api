@@ -14,14 +14,9 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Document(collection = "veiculo")
 public class Veiculo {
-    @Id
-    private String id;
     @NonNull
     private String placa;
     @NonNull
     private String tipo;
-    @DBRef
-    private List<Recibo> recibos = new ArrayList<>();
 }
