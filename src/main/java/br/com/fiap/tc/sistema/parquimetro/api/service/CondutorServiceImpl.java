@@ -56,6 +56,7 @@ public class CondutorServiceImpl implements CondutorService {
         condutor.setCPF(condutorDTO.CPF());
         condutor.setEndereco(condutorDTO.endereco());
         condutor.setFormaPagamento(condutorDTO.formaPagamento());
+        condutor.setVeiculos(condutorDTO.veiculos());
 
         Condutor saveCondutor = condutorRepository.save(condutor);
         return toDTO(saveCondutor);

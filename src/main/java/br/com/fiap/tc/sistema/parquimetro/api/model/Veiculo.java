@@ -19,4 +19,8 @@ public class Veiculo {
     private String placa;
     @NonNull
     private String tipo;
+    private String marca;
+    private String modelo;
+    private Integer ano;
+    private String cor;
 }
