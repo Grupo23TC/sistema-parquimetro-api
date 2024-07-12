@@ -1,10 +1,15 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
+import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFoundException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.dto.CondutorDTO;
-import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFounException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.Condutor;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.repository.CondutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +23,11 @@ public class CondutorServiceImpl implements CondutorService {
     private CondutorRepository condutorRepository;
 
     @Autowired
-    public CondutorServiceImpl(CondutorRepository condutorRepository) {
-        this.condutorRepository = condutorRepository;
-    }
+    private MongoTemplate mongoTemplate;
 
     @Override
     public void validarCondutor(Condutor condutor) {
-        Condutor condutorExistente = condutorRepository.findById(condutor.getId()).orElseThrow(() -> new CondutorNotFounException("Condutor não encontrado"));
+        Condutor condutorExistente = condutorRepository.findById(condutor.getId()).orElseThrow(() -> new CondutorNotFoundException("Condutor não encontrado"));
     }
     @Override
     @Transactional(readOnly = true)
@@ -39,33 +42,46 @@ public class CondutorServiceImpl implements CondutorService {
     @Transactional(readOnly = true)
     public CondutorDTO buscarCondutorPorId(String condutorId) {
         Condutor condutor = condutorRepository.findById(condutorId)
-                .orElseThrow(() -> new CondutorNotFounException(condutorId));
+                .orElseThrow(() -> new CondutorNotFoundException(condutorId));
         return toDTO(condutor);
     }
 
     @Override
-    public CondutorDTO criarCondutor(CondutorDTO condutorDto) {
+    public CondutorDTO criarCondutor(CondutorDTO condutorDTO) {
         Condutor condutor = new Condutor();
-        condutor.setNome(condutorDto.nome());
-        condutor.setTelefone(condutorDto.telefone());
-        condutor.setEmail(condutorDto.email());
-        condutor.setCpf(condutorDto.cpf());
-        condutor.setFormaPagamento(condutorDto.formaPagamento());
+
+        condutor.setNome(condutorDTO.nome());
+        condutor.setTelefone(condutorDTO.telefone());
+        condutor.setEmail(condutorDTO.email());
+        condutor.setCPF(condutorDTO.CPF());
+        condutor.setEndereco(condutorDTO.endereco());
+        condutor.setFormaPagamento(condutorDTO.formaPagamento());
 
         Condutor saveCondutor = condutorRepository.save(condutor);
         return toDTO(saveCondutor);
     }
 
     @Override
-    public CondutorDTO atualizarCondutor(String condutorId, CondutorDTO condutorDto) {
-        Condutor condutor = condutorRepository.findById(condutorId)
-                .orElseThrow(() -> new CondutorNotFounException(condutorId));
+    public void atualizarFormaPagamento(String id, FormaPagamentoEnum formaPagamento) {
 
-        condutor.setNome(condutorDto.nome());
-        condutor.setTelefone(condutorDto.telefone());
-        condutor.setEmail(condutorDto.email());
-        condutor.setCpf(condutorDto.cpf());
-        condutor.setFormaPagamento(condutorDto.formaPagamento());
+        Query query = new Query(Criteria.where("_id").is(id));
+
+        Update update = new Update().set("formaPagamento", formaPagamento);
+
+        this.mongoTemplate.updateFirst(query, update, Condutor.class);
+    }
+
+    @Override
+    public CondutorDTO atualizarCondutor(String condutorId, CondutorDTO condutorDTO) {
+        Condutor condutor = condutorRepository.findById(condutorId)
+                .orElseThrow(() -> new CondutorNotFoundException(condutorId));
+
+        condutor.setNome(condutorDTO.nome());
+        condutor.setTelefone(condutorDTO.telefone());
+        condutor.setEmail(condutorDTO.email());
+        condutor.setCPF(condutorDTO.CPF());
+        condutor.setEndereco(condutorDTO.endereco());
+        condutor.setFormaPagamento(condutorDTO.formaPagamento());
 
 
         Condutor updatedCondutor = condutorRepository.save(condutor);
@@ -76,18 +92,17 @@ public class CondutorServiceImpl implements CondutorService {
     public void deletarCondutor(String condutorId) {
         condutorRepository.deleteById(condutorId);
     }
-
-    //TODO: Implementar o método toDTO
    private CondutorDTO toDTO(Condutor condutor) {
         return new CondutorDTO(
                 condutor.getId(),
                 condutor.getNome(),
                 condutor.getTelefone(),
                 condutor.getEmail(),
-                condutor.getCpf(),
+                condutor.getCPF(),
+                condutor.getEndereco(),
                 condutor.getVeiculos(),
                 condutor.getFormaPagamento()
         );
-}
+    }
 
 }
