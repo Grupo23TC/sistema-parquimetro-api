@@ -1,11 +1,10 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
+import br.com.fiap.tc.sistema.parquimetro.api.model.enums.StatusReciboEnum;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +16,10 @@ import java.time.LocalDateTime;
 public class Recibo {
     @Id
     private String id;
-    private LocalDateTime entrada;
-    private LocalDateTime saida;
+    private StatusReciboEnum status;
+    private Locacao locacao;
+    private String tempoEstacionado;
+    private Double tarifa;
+    private FormaPagamentoEnum formaPagamento;
+    private Double valorTotal;
 }
