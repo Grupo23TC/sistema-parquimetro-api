@@ -8,6 +8,4 @@ public record EnderecoDTO (
         String estado,
         String cep
 ){
-
-
 }

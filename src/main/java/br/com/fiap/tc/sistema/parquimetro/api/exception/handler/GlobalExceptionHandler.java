@@ -30,6 +30,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(erro);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErroCustomizado> handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErroCustomizado erro = new ErroCustomizado(
+                Instant.now(),
+                status.value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(erro);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroCustomizado> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request){
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
