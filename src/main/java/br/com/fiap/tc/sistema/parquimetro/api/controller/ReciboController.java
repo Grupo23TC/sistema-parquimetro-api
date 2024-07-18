@@ -1,7 +1,8 @@
 package br.com.fiap.tc.sistema.parquimetro.api.controller;
 
 import br.com.fiap.tc.sistema.parquimetro.api.model.Recibo;
-import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoRequest;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.ReciboDTO;
 import br.com.fiap.tc.sistema.parquimetro.api.service.ReciboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,11 @@ public class ReciboController {
     private ReciboService reciboService;
 
     @PostMapping("/iniciar-locacao")
-    public ResponseEntity<Recibo> iniciarLocacao(@RequestBody LocacaoDTO locacaoDTO) {
-        Recibo reciboSalvo = reciboService.iniciarLocacao(locacaoDTO);
+    public ResponseEntity<ReciboDTO> iniciarLocacao(@RequestBody LocacaoRequest locacaoRequest) {
+        ReciboDTO reciboSalvo = reciboService.iniciarLocacao(locacaoRequest);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(reciboSalvo.getId())
+                .buildAndExpand(reciboSalvo.id())
                 .toUri();
         return ResponseEntity.created(uri).body(reciboSalvo);
     }

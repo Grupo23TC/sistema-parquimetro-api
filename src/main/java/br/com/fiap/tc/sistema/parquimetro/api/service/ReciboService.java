@@ -1,11 +1,11 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
 
-import br.com.fiap.tc.sistema.parquimetro.api.model.Recibo;
-import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoRequest;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.ReciboDTO;
 
 public interface ReciboService {
 
-    Recibo iniciarLocacao(LocacaoDTO locacaoDTO);
+    ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest);
 
 }
