@@ -7,7 +7,7 @@ import br.com.fiap.tc.sistema.parquimetro.api.model.dto.ReciboDTO;
 
 public interface ReciboService {
 
-    public Recibo iniciarLocacao(LocacaoRequest locacaoRequest);
+    public ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest);
 
     public void finalizarLocacao(String reciboId);
 

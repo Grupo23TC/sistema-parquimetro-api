@@ -1,6 +1,5 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
-import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFoundException;
 import br.com.fiap.tc.sistema.parquimetro.api.exception.RecursoNotFoundException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.*;
 import br.com.fiap.tc.sistema.parquimetro.api.model.dto.CondutorDTO;
@@ -85,7 +84,7 @@ public class ReciboServiceImpl implements ReciboService {
 
         Recibo reciboSalvo = reciboRepository.save(recibo);
 
-        return toReciboDto(reciboSalvo);
+        return toDTO(reciboSalvo);
     }
 
     private Recibo criarRecibo(Locacao locacao, Double tarifa, FormaPagamentoEnum formaPagamento) {
@@ -116,17 +115,6 @@ public class ReciboServiceImpl implements ReciboService {
         return condutor;
     }
 
-    private ReciboDTO toReciboDto(Recibo recibo) {
-        return new ReciboDTO(
-            recibo.getId(),
-            recibo.getStatus(),
-            recibo.getLocacao(),
-            recibo.getTempoEstacionado(),
-            recibo.getTarifa(),
-            recibo.getFormaPagamento(),
-            recibo.getValorTotal()
-        );
-    }
     @Override
     @Transactional(readOnly = true)
     public ReciboDTO buscarReciboPorId(String reciboId) {
