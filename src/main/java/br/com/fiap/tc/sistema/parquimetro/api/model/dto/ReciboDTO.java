@@ -7,12 +7,12 @@ import br.com.fiap.tc.sistema.parquimetro.api.model.enums.StatusReciboEnum;
 import java.time.LocalDateTime;
 
 public record ReciboDTO(
-        String id,
-        StatusReciboEnum status,
-        Locacao locacao,
-        String tempoEstacionado,
-        Double tarifa,
-        FormaPagamentoEnum formaPagamento,
-        Double valorTotal
+    String id,
+    StatusReciboEnum status,
+    Locacao locacao,
+    String tempoEstacionado,
+    Double tarifa,
+    FormaPagamentoEnum formaPagamento,
+    Double valorTotal
 ) {
 }

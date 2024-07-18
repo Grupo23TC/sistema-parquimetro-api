@@ -28,11 +28,12 @@ public class CondutorController {
   }
 
   @PutMapping("/{id}")
-  public void atualizarFormaPagamento(@PathVariable String id,
+  public ResponseEntity<Void> atualizarFormaPagamento(@PathVariable String id,
                                       @RequestBody FormaPagamentoEnum formaPagamento) {
 
     this.condutorService.atualizarFormaPagamento(id, formaPagamento);
 
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping
