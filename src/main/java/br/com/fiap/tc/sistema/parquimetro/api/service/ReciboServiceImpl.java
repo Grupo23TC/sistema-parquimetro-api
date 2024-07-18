@@ -1,9 +1,11 @@
 package br.com.fiap.tc.sistema.parquimetro.api.service;
 
+import br.com.fiap.tc.sistema.parquimetro.api.exception.CondutorNotFoundException;
 import br.com.fiap.tc.sistema.parquimetro.api.exception.RecursoNotFoundException;
 import br.com.fiap.tc.sistema.parquimetro.api.model.*;
 import br.com.fiap.tc.sistema.parquimetro.api.model.dto.CondutorDTO;
 import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoDTO;
+import br.com.fiap.tc.sistema.parquimetro.api.model.dto.ReciboDTO;
 import br.com.fiap.tc.sistema.parquimetro.api.model.enums.FormaPagamentoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.model.enums.StatusReciboEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.model.enums.TipoPeriodoEnum;
@@ -97,6 +99,60 @@ public class ReciboServiceImpl implements ReciboService {
         return reciboSalvo;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ReciboDTO buscarReciboPorId(String reciboId) {
+        Recibo recibo = reciboRepository.findById(reciboId)
+                .orElseThrow(() -> new RecursoNotFoundException(reciboId));
+        return toDTO(recibo);
+    }
+
+    @Override
+    public void atualizar(Recibo updateRecibo) {
+        this.reciboRepository.save(updateRecibo);
+    }
+
+    @Override
+    public void finalizarLocacao(String reciboId) {
+        // valida se existe o Recibo
+        ReciboDTO recibo = buscarReciboPorId(reciboId);
+
+        Recibo reciboIf = toRecibo(recibo);
+
+        if(recibo.status().equals(StatusReciboEnum.ABERTO)
+                && recibo.locacao().getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.VARIAVEL)) {
+
+            reciboIf.getLocacao().setFim(LocalDateTime.now());
+
+            reciboIf.setStatus(StatusReciboEnum.FINALIZADO);
+            reciboIf.setValorTotal(tarifa * 2); //TODO implementar calculo de hora aqui
+        } //TODO caso o recibo já estiver FINALIZADO lançar exception
+        atualizar(reciboIf);
+    }
+
+    private Recibo toRecibo(ReciboDTO reciboDTO) {
+        return Recibo.builder()
+                .id(reciboDTO.id())
+                .status(reciboDTO.status())
+                .locacao(reciboDTO.locacao())
+                .tempoEstacionado(reciboDTO.tempoEstacionado())
+                .tarifa(reciboDTO.tarifa())
+                .formaPagamento(reciboDTO.formaPagamento())
+                .valorTotal(reciboDTO.valorTotal())
+                .build();
+    }
+
+    private ReciboDTO toDTO(Recibo recibo) {
+        return new ReciboDTO(
+                recibo.getId(),
+                recibo.getStatus(),
+                recibo.getLocacao(),
+                recibo.getTempoEstacionado(),
+                recibo.getTarifa(),
+                recibo.getFormaPagamento(),
+                recibo.getValorTotal()
+        );
+    }
 }
 
 
