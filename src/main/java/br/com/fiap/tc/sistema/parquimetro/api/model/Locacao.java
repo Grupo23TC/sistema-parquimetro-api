@@ -1,6 +1,7 @@
 package br.com.fiap.tc.sistema.parquimetro.api.model;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Locacao {
-
     private Condutor condutor;
     private Vaga vaga;
     private Periodo periodo;
