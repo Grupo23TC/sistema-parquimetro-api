@@ -55,15 +55,15 @@ public class AlertaServiceImpl implements AlertaService {
 
         List<Recibo> reciboList = mongoTemplate.find(query, Recibo.class);
 
-        // Calcular minuto da hora de agora
-        int minutoAux = LocalDateTime.now().getMinute();
+        // Calcular minuto da hora de agora + 15 min
+        int minutoAux = LocalDateTime.now().plus(15, ChronoUnit.MINUTES).getMinute();
 
         // Filtramos a lista de recibos de periodo variavel em aberto,
         // no qual o minuto da data de inicio +15 min seja = ao minuto de agora
         // assim o alarme que roda a de minuto em minuto vai notificar apenas 1 vez o condutor a cada hora
         reciboList.stream()
                 .filter(recibo ->
-                        recibo.getLocacao().getInicio().plus(15, ChronoUnit.MINUTES).getMinute() == (minutoAux))
+                        recibo.getLocacao().getInicio().getMinute() == (minutoAux))
                 .map(recibo -> "Condutor: " + recibo.getLocacao().getCondutor().getNome() +
                         " sua locação para o veículo de placa: " + recibo.getLocacao().getCondutor().getVeiculos().get(0).getPlaca() +
                         " vai completar mais 1 hora dentro de 15 minutos!")
