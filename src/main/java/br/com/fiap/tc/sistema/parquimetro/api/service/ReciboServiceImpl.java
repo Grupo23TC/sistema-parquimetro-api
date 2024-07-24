@@ -29,63 +29,11 @@ public class ReciboServiceImpl implements ReciboService {
     @Autowired
     private ReciboRepository reciboRepository;
 
-    @Value("${parquimetro.tarifa.hora}")
-    private Double tarifa;
+    private static final Double tarifa = 10.0; // Constante de tarifa por hora.
 
-    @Transactional
-    @Override
-    public ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest) {
+    //@Value("${parquimetro.tarifa.hora}")
+    //private Double tarifa;
 
-        // Aqui o CondutorService já valida se existe o condutor
-        CondutorDTO condutorDTO = condutorService.buscarCondutorPorId(locacaoRequest.idCondutor());
-
-        // Validar se o veiculo informado na locacao está registrado para o condutor
-        if (condutorDTO.veiculos().stream().noneMatch(veiculo -> veiculo.getPlaca().equals(locacaoRequest.placaVeiculo()))) {
-            throw new RecursoNotFoundException("Veículo informado não está cadastrado para o condutor.");
-        }
-
-        // Validações para periodo fixo
-        if (locacaoRequest.periodo().getTipoPeriodo().equals(TipoPeriodoEnum.FIXO)) {
-
-            // Validação duração informada
-            if (locacaoRequest.periodo().getDuracao() == null || locacaoRequest.periodo().getDuracao() <= 0) {
-                throw new IllegalArgumentException("Para períodos fixos a duração em horas deve ser informada.");
-            }
-
-            // Validação forma pagamento PIX
-            if (!condutorDTO.formaPagamento().equals(FormaPagamentoEnum.PIX)) {
-                throw new IllegalArgumentException("Somente aceitamos a forma de pagamento PIX para períodos fixos.");
-            }
-
-        }
-
-        // Criação Locação + Recibo
-        Veiculo veiculo = condutorDTO.veiculos().stream().filter(v -> v.getPlaca().equals(locacaoRequest.placaVeiculo())).findFirst().get();
-        List<Veiculo> listVeiculos = new ArrayList<>();
-        listVeiculos.add(veiculo);
-
-        Condutor condutor = criarCondutor(condutorDTO, listVeiculos);
-
-        Vaga vaga = new Vaga(locacaoRequest.enderecoVaga());
-
-        Locacao locacao = criarLocacao(condutor, vaga, locacaoRequest);
-
-        if (locacao.getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.FIXO)) {
-            long duracao = Integer.toUnsignedLong(locacao.getPeriodo().getDuracao());
-            locacao.setFim(locacao.getInicio().plus(duracao, HOURS));
-        }
-
-        Recibo recibo = criarRecibo(locacao, tarifa, condutor.getFormaPagamento());
-
-        if (locacao.getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.FIXO)) {
-            recibo.setTempoEstacionado(locacao.getPeriodo().getDuracao() + "h");
-            recibo.setValorTotal(tarifa * locacao.getPeriodo().getDuracao());
-        }
-
-        Recibo reciboSalvo = reciboRepository.save(recibo);
-
-        return toDTO(reciboSalvo);
-    }
 
     private Recibo criarRecibo(Locacao locacao, Double tarifa, FormaPagamentoEnum formaPagamento) {
         Recibo recibo = new Recibo();
@@ -95,6 +43,52 @@ public class ReciboServiceImpl implements ReciboService {
         recibo.setFormaPagamento(formaPagamento);
 
         return recibo;
+    }
+
+    @Transactional
+    @Override
+    public ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest) {
+        // Valida se o veículo informado está registrado para o condutor especificado na requisição.
+        CondutorDTO condutorDTO = validarCondutorEVeiculo(locacaoRequest);
+        // Prepara a locação criando uma nova instância de Locacao com os dados fornecidos.
+        Locacao locacao = prepararLocacao(condutorDTO, locacaoRequest);
+        // Cria um novo recibo para a locação com a tarifa e forma de pagamento especificadas.
+        Recibo recibo = criarRecibo(locacao, tarifa, condutorDTO.formaPagamento());
+        // Salva o recibo no repositório e retorna o recibo salvo.
+        Recibo reciboSalvo = reciboRepository.save(recibo);
+        // Converte o recibo salvo para DTO e o retorna.
+        return toDTO(reciboSalvo);
+    }
+
+    private CondutorDTO validarCondutorEVeiculo(LocacaoRequest locacaoRequest) {
+        // Busca o condutor pelo ID fornecido na requisição.
+        CondutorDTO condutorDTO = condutorService.buscarCondutorPorId(locacaoRequest.idCondutor());
+        // Verifica se o veículo especificado está registrado para o condutor.
+        boolean veiculoRegistrado = condutorDTO.veiculos().stream()
+                .anyMatch(veiculo -> veiculo.getPlaca().equals(locacaoRequest.placaVeiculo()));
+        // Se o veículo não estiver registrado, lança uma exceção.
+        if (!veiculoRegistrado) {
+            throw new RecursoNotFoundException("Veículo informado não está cadastrado para o condutor.");
+        }
+        // Retorna o DTO do condutor se o veículo estiver registrado.
+        return condutorDTO;
+    }
+
+    private Locacao prepararLocacao(CondutorDTO condutorDTO, LocacaoRequest locacaoRequest) {
+        // Filtra e encontra o veículo especificado na requisição dentre os veículos do condutor.
+        Veiculo veiculo = condutorDTO.veiculos().stream()
+                .filter(v -> v.getPlaca().equals(locacaoRequest.placaVeiculo()))
+                .findFirst()
+                .orElseThrow(() -> new RecursoNotFoundException("Veículo não encontrado."));
+        // Cria uma lista de veículos e adiciona o veículo encontrado a ela.
+        List<Veiculo> listVeiculos = new ArrayList<>();
+        listVeiculos.add(veiculo);
+        // Cria um novo condutor com os dados fornecidos e a lista de veículos.
+        Condutor condutor = criarCondutor(condutorDTO, listVeiculos);
+        // Cria uma nova vaga com o endereço fornecido na requisição.
+        Vaga vaga = new Vaga(locacaoRequest.enderecoVaga());
+        // Retorna uma nova locação criada com o condutor, a vaga e os dados da requisição.
+        return criarLocacao(condutor, vaga, locacaoRequest);
     }
 
     private Locacao criarLocacao(Condutor condutor, Vaga vaga, LocacaoRequest locacaoRequest) {
@@ -128,24 +122,47 @@ public class ReciboServiceImpl implements ReciboService {
         this.reciboRepository.save(updateRecibo);
     }
 
+    @Transactional
     @Override
     public void finalizarLocacao(String reciboId) {
-        // valida se existe o Recibo
+        // Busca o recibo pelo ID fornecido.
         ReciboDTO recibo = buscarReciboPorId(reciboId);
-
-        Recibo reciboIf = toRecibo(recibo);
-
-        if(recibo.status().equals(StatusReciboEnum.ABERTO)
-                && recibo.locacao().getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.VARIAVEL)) {
-
-            reciboIf.getLocacao().setFim(LocalDateTime.now());
-
-            reciboIf.setStatus(StatusReciboEnum.FINALIZADO);
-            reciboIf.setValorTotal(tarifa * 2); //TODO implementar calculo de hora aqui
-        } //TODO caso o recibo já estiver FINALIZADO lançar exception
-        atualizar(reciboIf);
+        // Valida se o status do recibo permite finalização.
+        validarStatusRecibo(recibo);
+        // Atualiza o status do recibo para finalizado e calcula o valor total.
+        atualizarStatusEValorTotal(recibo);
     }
 
+    private void validarStatusRecibo(ReciboDTO recibo) {
+        // Se o recibo já estiver finalizado, lança uma exceção.
+        if (recibo.status().equals(StatusReciboEnum.FINALIZADO)) {
+            throw new IllegalStateException("Recibo já está finalizado.");
+        }
+    }
+
+    private void atualizarStatusEValorTotal(ReciboDTO reciboDTO) {
+        // Converte o DTO para a entidade Recibo.
+        Recibo recibo = toRecibo(reciboDTO);
+        // Verifica se o recibo está aberto e se o tipo de período é variável.
+        if (reciboDTO.status().equals(StatusReciboEnum.ABERTO)
+                && reciboDTO.locacao().getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.VARIAVEL)) {
+            // Define o momento de finalização da locação.
+            recibo.getLocacao().setFim(LocalDateTime.now());
+            // Atualiza o status do recibo para finalizado.
+            recibo.setStatus(StatusReciboEnum.FINALIZADO);
+            // Calcula e define o valor total com base no tempo de estacionamento.
+            recibo.setValorTotal(calcularValorTotal(recibo));
+        }
+        // Persiste as alterações no recibo.
+        atualizar(recibo);
+    }
+
+    private Double calcularValorTotal(Recibo recibo) {
+        // Calcula a quantidade de horas entre o início e o fim da locação.
+        long horasEstacionado = HOURS.between(recibo.getLocacao().getInicio(), recibo.getLocacao().getFim());
+        // Calcula o valor total multiplicando a tarifa pelas horas estacionadas.
+        return tarifa * horasEstacionado;
+    }
     private Recibo toRecibo(ReciboDTO reciboDTO) {
         return Recibo.builder()
                 .id(reciboDTO.id())
@@ -170,5 +187,3 @@ public class ReciboServiceImpl implements ReciboService {
         );
     }
 }
-
-
