@@ -27,7 +27,9 @@ public class CondutorServiceImpl implements CondutorService {
 
     @Override
     public void validarCondutor(Condutor condutor) {
-        Condutor condutorExistente = condutorRepository.findById(condutor.getId()).orElseThrow(() -> new CondutorNotFoundException("Condutor não encontrado"));
+        // Remoção da variável 'condutorExistente', pois após a validação o condutor não será atribuído a nenhuma variável
+        condutorRepository.findById(condutor.getId())
+                .orElseThrow(() -> new CondutorNotFoundException("Condutor não encontrado"));
     }
     @Override
     @Transactional(readOnly = true)
