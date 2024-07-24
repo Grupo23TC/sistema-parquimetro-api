@@ -40,7 +40,7 @@ public class ReciboControllerTest {
         // Configuração
         LocacaoRequest locacaoRequest = new LocacaoRequest("123",
                 "ABC-1234",
-                new EnderecoDTO("Rua A", "123", "São Paulo", "SP"),
+                new EnderecoDTO("Rua A", "123", "São Paulo", "SP", "12345-123"),
                 new Periodo(TipoPeriodoEnum.FIXO, 1));
         ReciboDTO reciboDTO = new ReciboDTO("123",StatusReciboEnum.ABERTO, null, "1 hora", 10.0, FormaPagamentoEnum.CARTAO_CREDITO, 10.0);
 
