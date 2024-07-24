@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,10 @@ public class ReciboServiceImpl implements ReciboService {
     @Autowired
     private ReciboRepository reciboRepository;
 
-    private static final Double tarifa = 10.0; // Constante de tarifa por hora.
 
-    //@Value("${parquimetro.tarifa.hora}")
-    //private Double tarifa;
+
+    @Value("${parquimetro.tarifa.hora}")
+    private Double tarifa;
 
 
     private Recibo criarRecibo(Locacao locacao, Double tarifa, FormaPagamentoEnum formaPagamento) {
@@ -158,11 +159,14 @@ public class ReciboServiceImpl implements ReciboService {
     }
 
     private Double calcularValorTotal(Recibo recibo) {
-        // Calcula a quantidade de horas entre o início e o fim da locação.
-        long horasEstacionado = HOURS.between(recibo.getLocacao().getInicio(), recibo.getLocacao().getFim());
-        // Calcula o valor total multiplicando a tarifa pelas horas estacionadas.
-        return tarifa * horasEstacionado;
+        long minutosEstacionado = Duration.between(
+                recibo.getLocacao().getInicio(),
+                recibo.getLocacao().getFim()
+        ).toMinutes();
+
+        return tarifa * Math.ceil(minutosEstacionado / 60.0);
     }
+
     private Recibo toRecibo(ReciboDTO reciboDTO) {
         return Recibo.builder()
                 .id(reciboDTO.id())
