@@ -98,7 +98,10 @@ public class ReciboServiceImpl implements ReciboService {
         locacao.setVaga(vaga);
         locacao.setPeriodo(locacaoRequest.periodo());
         locacao.setInicio(LocalDateTime.now());
-
+        if (locacao.getPeriodo().getTipoPeriodo().equals(TipoPeriodoEnum.VARIAVEL) &&
+                locacao.getPeriodo().getDuracao() != null) {
+            locacao.getPeriodo().setDuracao(null);
+        }
         return locacao;
     }
 
