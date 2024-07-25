@@ -50,17 +50,9 @@ public class CondutorServiceImpl implements CondutorService {
 
     @Override
     public CondutorDTO criarCondutor(CondutorDTO condutorDTO) {
-        Condutor condutor = new Condutor();
-
-        condutor.setNome(condutorDTO.nome());
-        condutor.setTelefone(condutorDTO.telefone());
-        condutor.setEmail(condutorDTO.email());
-        condutor.setCPF(condutorDTO.CPF());
-        condutor.setEndereco(condutorDTO.endereco());
-        condutor.setFormaPagamento(condutorDTO.formaPagamento());
-        condutor.setVeiculos(condutorDTO.veiculos());
-
+        Condutor condutor = toEntity(condutorDTO);
         Condutor saveCondutor = condutorRepository.save(condutor);
+
         return toDTO(saveCondutor);
     }
 
@@ -82,7 +74,7 @@ public class CondutorServiceImpl implements CondutorService {
         condutor.setNome(condutorDTO.nome());
         condutor.setTelefone(condutorDTO.telefone());
         condutor.setEmail(condutorDTO.email());
-        condutor.setCPF(condutorDTO.CPF());
+        condutor.setCpf(condutorDTO.cpf());
         condutor.setEndereco(condutorDTO.endereco());
         condutor.setFormaPagamento(condutorDTO.formaPagamento());
 
@@ -101,11 +93,22 @@ public class CondutorServiceImpl implements CondutorService {
                 condutor.getNome(),
                 condutor.getTelefone(),
                 condutor.getEmail(),
-                condutor.getCPF(),
+                condutor.getCpf(),
                 condutor.getEndereco(),
                 condutor.getVeiculos(),
                 condutor.getFormaPagamento()
         );
     }
 
+    private Condutor toEntity(CondutorDTO condutorDTO) {
+        return new Condutor(
+            condutorDTO.nome(),
+            condutorDTO.telefone(),
+            condutorDTO.endereco(),
+            condutorDTO.email(),
+            condutorDTO.cpf(),
+            condutorDTO.formaPagamento(),
+            condutorDTO.veiculos()
+        );
+    }
 }

@@ -9,10 +9,12 @@ public interface ReciboService {
 
     public ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest);
 
-    public void finalizarLocacao(String reciboId);
+    public ReciboDTO finalizarLocacao(String reciboId);
 
     public ReciboDTO buscarReciboPorId(String reciboId);
 
     public void atualizar(Recibo updateRecibo);
+
+    void finalizarReciboFixoScheduler();
 
 }
