@@ -15,4 +15,6 @@ public interface ReciboService {
 
     public void atualizar(Recibo updateRecibo);
 
+    void finalizarReciboFixoScheduler();
+
 }

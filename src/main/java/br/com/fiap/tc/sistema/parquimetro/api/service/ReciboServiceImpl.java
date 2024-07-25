@@ -11,6 +11,10 @@ import br.com.fiap.tc.sistema.parquimetro.api.model.enums.TipoPeriodoEnum;
 import br.com.fiap.tc.sistema.parquimetro.api.repository.ReciboRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,9 @@ public class ReciboServiceImpl implements ReciboService {
 
     @Autowired
     private ReciboRepository reciboRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Value("${parquimetro.tarifa.hora}")
     private Double tarifa;
@@ -170,6 +177,30 @@ public class ReciboServiceImpl implements ReciboService {
                 recibo.getFormaPagamento(),
                 recibo.getValorTotal()
         );
+    }
+
+    // Execução a cada 5min
+    @Scheduled(cron = "0 */5 * ? * *")
+    @Override
+    public void finalizarReciboFixoScheduler() {
+
+        // Consultar no banco todos recibos status ABERTO e locacao.periodo.tipoPeriodo = FIXO
+        // e que estejam tenho data fim anterior a data de agora
+        Query query = new Query(Criteria
+                .where("status").is(StatusReciboEnum.ABERTO)
+                .and("locacao.periodo.tipoPeriodo").is(TipoPeriodoEnum.FIXO)
+                .and("locacao.fim")
+                .lte(LocalDateTime.now()));
+
+        List<Recibo> reciboList = mongoTemplate.find(query, Recibo.class);
+
+        for (Recibo recibo : reciboList) {
+            recibo.setStatus(StatusReciboEnum.FINALIZADO);
+            atualizar(recibo);
+            System.out.println("Condutor: " + recibo.getLocacao().getCondutor().getNome() +
+                    " sua locação para o veículo de placa: " + recibo.getLocacao().getCondutor().getVeiculos().get(0).getPlaca() +
+                    " foi automaticamente finalizada.");
+        }
     }
 }
 

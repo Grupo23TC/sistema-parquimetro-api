@@ -7,12 +7,14 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 @OpenAPIDefinition(info = @Info(
 		title = "Parquímetro - Grupo 23",
 		version = "1.0.0",
-		description = "Sistema de parquímetro desenvolvido para o Tech Challenge da segunda fase da Pós Tech da FIAP. O objetivo do parquímetro é monitorar os condutores em zonas de estacionamento reguladas, Iniciando o período de locação pelo sistema e emitindo um recibo sempre que o período de estacionamento é concluído."
+		description = "Sistema de parquímetro desenvolvido para o Tech Challenge da segunda fase da Pós Tech da FIAP. O objetivo do parquímetro é monitorar os condutores em zonas de estacionamento reguladas, iniciando o período de locação pelo sistema e emitindo um recibo sempre que o período de estacionamento é concluído."
 ))
 public class ParquimetroApiApplication {
 
