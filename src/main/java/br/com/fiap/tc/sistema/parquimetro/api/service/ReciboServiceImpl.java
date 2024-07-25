@@ -136,7 +136,7 @@ public class ReciboServiceImpl implements ReciboService {
     }
 
     @Override
-    public void finalizarLocacao(String reciboId) {
+    public ReciboDTO finalizarLocacao(String reciboId) {
         // valida se existe o Recibo
         ReciboDTO recibo = buscarReciboPorId(reciboId);
 
@@ -151,6 +151,8 @@ public class ReciboServiceImpl implements ReciboService {
             reciboIf.setValorTotal(tarifa * 2); //TODO implementar calculo de hora aqui
         } //TODO caso o recibo já estiver FINALIZADO lançar exception
         atualizar(reciboIf);
+
+        return toDTO(reciboIf);
     }
 
     private Recibo toRecibo(ReciboDTO reciboDTO) {
