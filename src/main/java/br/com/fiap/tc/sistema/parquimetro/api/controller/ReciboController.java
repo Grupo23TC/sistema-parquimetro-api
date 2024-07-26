@@ -7,6 +7,7 @@ import br.com.fiap.tc.sistema.parquimetro.api.model.dto.LocacaoRequest;
 import br.com.fiap.tc.sistema.parquimetro.api.model.dto.ReciboDTO;
 import br.com.fiap.tc.sistema.parquimetro.api.service.ReciboService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/recibos")
@@ -27,6 +29,28 @@ public class ReciboController {
 
     @Autowired
     private ReciboService reciboService;
+
+    @GetMapping
+    @Operation(summary = "Lista de recibos.", description = "Retorna uma lista com todos os recibos cadastrados no banco de dados.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Locação iniciada com sucesso.",
+            content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))}),
+    })
+    public ResponseEntity<List<ReciboDTO>> findAll() {
+        return ResponseEntity.ok(reciboService.buscarRecibos());
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Recibo por id.", description = "Retorna um recibo com base no Id passado como parâmetro da rota.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Recibo encontrado com sucesso.",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class))}),
+        @ApiResponse(responseCode = "404", description = "Recibo não encontrado.",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErroCustomizado.class))}),
+    })
+    public ResponseEntity<ReciboDTO> findById(@PathVariable String id) {
+        return ResponseEntity.ok(reciboService.buscarReciboPorId(id));
+    }
 
     @PostMapping("/iniciar-locacao")
     @Operation(summary = "Inicia a locação do condutor.", description = "Cria a locação do condutor se os dados apresentados no corpo da requisição estiverem corretos.")
