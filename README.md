@@ -59,6 +59,9 @@ spring.datasource.password
 
 Para executar o projeto localmente, deve estar usando a versão do JDK 17 ou superior e possuir o Maven em uma versão compatível configurado na sua máquina. Por se tratar de uma aplicação Spring Boot, o próprio Spring se encarregará de buildar e startar a aplicação em um servidor local Tomcat na porta 8080.
 
+Para você acessar o Swagger, basta, enquanto o projeto estiver em execução, acessar o link: http://localhost:8080/swagger-ui/index.html
+
+
 ## Desenvolvedores
 
 <table align="center">
