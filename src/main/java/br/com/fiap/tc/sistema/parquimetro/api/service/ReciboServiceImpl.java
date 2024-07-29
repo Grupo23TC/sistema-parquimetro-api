@@ -53,6 +53,11 @@ public class ReciboServiceImpl implements ReciboService {
         return recibo;
     }
 
+    @Override
+    public List<ReciboDTO> buscarRecibos() {
+        return reciboRepository.findAll().stream().map(this::toDTO).toList();
+    }
+
     @Transactional
     @Override
     public ReciboDTO iniciarLocacao(LocacaoRequest locacaoRequest) {
@@ -143,6 +148,8 @@ public class ReciboServiceImpl implements ReciboService {
         validarStatusRecibo(recibo);
         // Atualiza o status do recibo para finalizado e calcula o valor total.
         atualizarStatusEValorTotal(recibo);
+
+        return recibo;
     }
 
     private void validarStatusRecibo(ReciboDTO recibo) {
